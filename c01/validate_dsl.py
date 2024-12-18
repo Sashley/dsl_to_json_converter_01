@@ -27,5 +27,5 @@ if __name__ == "__main__":
     validated_data = validate_dsl(dsl_json_file)
 
     # Optionally, print the validated data
-    if validated_data:
-        print(validated_data.model_dump_json(indent=4))
+    # if validated_data:
+    #     print(validated_data.model_dump_json(indent=4))

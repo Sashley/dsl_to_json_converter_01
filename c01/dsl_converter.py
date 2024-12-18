@@ -60,18 +60,26 @@ def second_pass_generate_models(file_path, model_map):
 
             elif current_model:
                 parts = line.split(maxsplit=2)
+                print('parts: ', parts)
                 if len(parts) < 2:
                     continue  # Skip invalid or incomplete lines
                 field_name, field_type = parts[0], parts[1]
-                field_def = {"type": "Integer" if "Int" in field_type else "String"}
+                print('field type: ', field_type, ' len parts: ', len(parts))
+                if not "[]" in field_type:
+                    field_def = {"type": "Integer" if "Int" in field_type else "String"}
 
-                # Handle primary keys
-                if "pk" in field_type:
-                    field_def["primary_key"] = True
-                    field_def["nullable"] = False
+                # Check for primary key
+                # if "[pk" in field_type:
+                #     field_def["primary_key"] = True
+                #     field_def["nullable"] = False
 
                 # Handle foreign keys
                 if len(parts) == 3:
+                    if "[pk" in parts[2]:
+                        field_def["primary_key"] = True
+                        field_def["nullable"] = False
+                    if "increment" in parts[2]:
+                        field_def["auto_increment"] = True
                     target_model, target_field = parse_foreign_key(parts[2], model_map)
                     if target_model and target_field:
                         field_def["foreign_key"] = f"{target_model}.{target_field}"
@@ -97,7 +105,6 @@ def second_pass_generate_models(file_path, model_map):
                     field_def.update(DEFAULT_PARAMS)
 
                 current_model["Fields"][field_name] = field_def
-
 
     # Add indices for foreign keys
     for model, data in result["Models"].items():

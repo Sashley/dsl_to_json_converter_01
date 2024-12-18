@@ -1,4 +1,5 @@
 import unittest
+import os
 from sqlalchemy.orm import declarative_base, clear_mappers
 from sqlalchemy import MetaData
 from json_to_sqlalchemy import load_json_to_models
@@ -9,10 +10,11 @@ class TestJSONToSQLAlchemy(unittest.TestCase):
         Set up the DSL JSON for testing and clear existing metadata.
         """
         clear_mappers()  # Reset SQLAlchemy mappers
-        global Base
-        Base = declarative_base(metadata=MetaData())  # Create a new Base with fresh MetaData
-        self.dsl_json = "shipping_converted.json"  # Ensure the correct path to your JSON file
-        self.models = load_json_to_models(self.dsl_json)
+        self.Base = declarative_base(metadata=MetaData())  # Create a new Base with fresh MetaData
+        # Use path relative to the test file
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.dsl_json = os.path.join(current_dir, "shipping_converted.json")
+        self.models = load_json_to_models(self.dsl_json, self.Base)
 
     def test_model_creation(self):
         """

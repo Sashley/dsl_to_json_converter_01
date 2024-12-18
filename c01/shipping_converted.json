@@ -5,9 +5,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "bill_of_lading": {
                     "type": "String",
@@ -134,9 +134,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "manifest_id": {
                     "type": "Integer",
@@ -223,9 +223,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -261,9 +261,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -299,9 +299,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "number": {
                     "type": "String",
@@ -360,9 +360,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "container_id": {
                     "type": "Integer",
@@ -437,9 +437,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -475,9 +475,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -507,9 +507,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -523,15 +523,17 @@
                     "nullable": true
                 },
                 "manifests": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "type": "Integer",
+                    "foreign_key": "S008_ShippingCompany.id",
+                    "nullable": true
                 }
             },
             "Indices": {
                 "idx_shipping_company_id": [
                     "shipping_company_id"
+                ],
+                "idx_manifests": [
+                    "manifests"
                 ]
             },
             "Menus": {
@@ -552,9 +554,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -574,13 +576,13 @@
                     "unique": false
                 },
                 "legs": {
-                    "type": "String",
+                    "type": "Integer",
                     "nullable": true,
                     "default": null,
                     "unique": false
                 },
                 "manifests": {
-                    "type": "String",
+                    "type": "Integer",
                     "nullable": true,
                     "default": null,
                     "unique": false
@@ -613,9 +615,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "voyage_id": {
                     "type": "Integer",
@@ -672,9 +674,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -716,9 +718,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "pol_id": {
                     "type": "Integer",
@@ -763,9 +765,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -795,9 +797,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -880,9 +882,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "name": {
                     "type": "String",
@@ -924,9 +926,9 @@
             "Fields": {
                 "id": {
                     "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "primary_key": true,
+                    "nullable": false,
+                    "auto_increment": true
                 },
                 "distance": {
                     "type": "Integer",

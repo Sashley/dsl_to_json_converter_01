@@ -9,6 +9,7 @@ class FieldDef(BaseModel):
     default: Optional[str] = None
     unique: Optional[bool] = False
     foreign_key: Optional[str] = None
+    auto_increment: Optional[bool] = False
 
 
 class MenuContext(BaseModel):
