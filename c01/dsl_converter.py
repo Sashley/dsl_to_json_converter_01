@@ -34,9 +34,8 @@ def first_pass_create_model_map(file_path):
     return model_map
 
 def second_pass_generate_models(file_path, model_map):
-    """Second pass: Process fields, foreign keys, menus, and indices."""
-    result = {"version": "1.0", "Models": {}}
-    relationships = defaultdict(list)  # Track reverse relationships for drill downs
+    """Second pass: Process fields, menus, and indices."""
+    result = {"version": "1.0", "Models": {}, "Menus": {"Main": [], "Context": {}, "Statistics": {}}}
     current_model = None
 
     with open(file_path, "r") as file:
@@ -46,10 +45,18 @@ def second_pass_generate_models(file_path, model_map):
                 continue
 
             if line.startswith("table"):
+                # Start of a new table
                 table_name = line.split()[1]
                 prefixed_name = model_map[table_name]
-                current_model = {"Fields": {}, "Indices": {}, "Menus": {"Main": [], "DrillDown": [], "Statistics": []}}
+                current_model = {
+                    "Fields": {},
+                    "Indices": {},
+                    "Menus": {"Context": [], "Statistics": []}
+                }
                 result["Models"][prefixed_name] = current_model
+
+                # Add main menu entry
+                result["Menus"]["Main"].append({"table": table_name, "route": f"/view/{table_name}"})
 
             elif current_model:
                 parts = line.split(maxsplit=2)
@@ -58,29 +65,41 @@ def second_pass_generate_models(file_path, model_map):
                 field_name, field_type = parts[0], parts[1]
                 field_def = {"type": "Integer" if "Int" in field_type else "String"}
 
+                # Handle primary keys
                 if "pk" in field_type:
                     field_def["primary_key"] = True
                     field_def["nullable"] = False
 
-                if len(parts) == 3:  # Handle foreign keys
+                # Handle foreign keys
+                if len(parts) == 3:
                     target_model, target_field = parse_foreign_key(parts[2], model_map)
                     if target_model and target_field:
                         field_def["foreign_key"] = f"{target_model}.{target_field}"
-                        field_def["nullable"] = True  # Allow nullable foreign keys
+                        field_def["nullable"] = True
 
+                        # Context menu link for related table
+                        current_model["Menus"]["Context"].append(
+                            {"related_table": target_model, "route": f"/view/{target_model}?filter={field_name}"}
+                        )
+
+                # Handle one-to-many relationships (type ending with [])
+                if "[]" in field_type and len(parts) == 3:
+                    # Ensure valid drill-down reference exists in parts[2]
+                    match = re.search(r'(\w+)\[\]', field_type)
+                    if match:
+                        related_table = match.group(1)  # Extract related table name
+                        current_model["Menus"]["Context"].append(
+                            {"drill_down": related_table, "route": f"/view/{related_table}?filter={field_name}"}
+                        )
+
+                # Add default parameters for non-primary, non-foreign fields
                 if "primary_key" not in field_def and "foreign_key" not in field_def:
                     field_def.update(DEFAULT_PARAMS)
 
                 current_model["Fields"][field_name] = field_def
 
 
-    # Add connected menus and statistics based on relationships
-    for model, related_models in relationships.items():
-        if model in result["Models"]:
-            for related in related_models:
-                result["Models"][model]["Menus"]["DrillDown"].append(f"Connected: {related}")
-
-    # Generate indices for foreign keys
+    # Add indices for foreign keys
     for model, data in result["Models"].items():
         for field, details in data["Fields"].items():
             if "foreign_key" in details:

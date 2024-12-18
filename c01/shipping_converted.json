@@ -97,8 +97,36 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S015_Client",
+                        "route": "/view/S015_Client?filter=shipper_id"
+                    },
+                    {
+                        "related_table": "S015_Client",
+                        "route": "/view/S015_Client?filter=consignee_id"
+                    },
+                    {
+                        "related_table": "S009_Vessel",
+                        "route": "/view/S009_Vessel?filter=vessel_id"
+                    },
+                    {
+                        "related_table": "S010_Voyage",
+                        "route": "/view/S010_Voyage?filter=voyage_id"
+                    },
+                    {
+                        "related_table": "S012_Port",
+                        "route": "/view/S012_Port?filter=port_of_loading_id"
+                    },
+                    {
+                        "related_table": "S012_Port",
+                        "route": "/view/S012_Port?filter=port_of_discharge_id"
+                    },
+                    {
+                        "drill_down": "LineItem",
+                        "route": "/view/LineItem?filter=line_items"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -170,8 +198,24 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S001_Manifest",
+                        "route": "/view/S001_Manifest?filter=manifest_id"
+                    },
+                    {
+                        "related_table": "S004_PackType",
+                        "route": "/view/S004_PackType?filter=pack_type_id"
+                    },
+                    {
+                        "related_table": "S003_Commodity",
+                        "route": "/view/S003_Commodity?filter=commodity_id"
+                    },
+                    {
+                        "related_table": "S005_Container",
+                        "route": "/view/S005_Container?filter=container_id"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -204,8 +248,12 @@
             },
             "Indices": {},
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "drill_down": "LineItem",
+                        "route": "/view/LineItem?filter=line_items"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -238,8 +286,12 @@
             },
             "Indices": {},
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "drill_down": "LineItem",
+                        "route": "/view/LineItem?filter=line_items"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -287,8 +339,20 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S012_Port",
+                        "route": "/view/S012_Port?filter=port_id"
+                    },
+                    {
+                        "drill_down": "LineItem",
+                        "route": "/view/LineItem?filter=line_items"
+                    },
+                    {
+                        "drill_down": "ContainerHistory",
+                        "route": "/view/ContainerHistory?filter=container_histories"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -348,8 +412,24 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S005_Container",
+                        "route": "/view/S005_Container?filter=container_id"
+                    },
+                    {
+                        "related_table": "S012_Port",
+                        "route": "/view/S012_Port?filter=port_id"
+                    },
+                    {
+                        "related_table": "S015_Client",
+                        "route": "/view/S015_Client?filter=client_id"
+                    },
+                    {
+                        "related_table": "S007_ContainerStatus",
+                        "route": "/view/S007_ContainerStatus?filter=container_status_id"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -382,8 +462,12 @@
             },
             "Indices": {},
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "drill_down": "ContainerHistory",
+                        "route": "/view/ContainerHistory?filter=container_histories"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -410,8 +494,12 @@
             },
             "Indices": {},
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "drill_down": "Vessel",
+                        "route": "/view/Vessel?filter=vessels"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -447,8 +535,16 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S008_ShippingCompany",
+                        "route": "/view/S008_ShippingCompany?filter=shipping_company_id"
+                    },
+                    {
+                        "drill_down": "Manifest",
+                        "route": "/view/Manifest?filter=manifests"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -496,8 +592,20 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S009_Vessel",
+                        "route": "/view/S009_Vessel?filter=vessel_id"
+                    },
+                    {
+                        "drill_down": "Leg",
+                        "route": "/view/Leg?filter=legs"
+                    },
+                    {
+                        "drill_down": "Manifest",
+                        "route": "/view/Manifest?filter=manifests"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -547,8 +655,16 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S010_Voyage",
+                        "route": "/view/S010_Voyage?filter=voyage_id"
+                    },
+                    {
+                        "related_table": "S012_Port",
+                        "route": "/view/S012_Port?filter=port_id"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -587,8 +703,12 @@
             },
             "Indices": {},
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "drill_down": "Container",
+                        "route": "/view/Container?filter=containers"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -626,8 +746,16 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S012_Port",
+                        "route": "/view/S012_Port?filter=pol_id"
+                    },
+                    {
+                        "related_table": "S012_Port",
+                        "route": "/view/S012_Port?filter=pod_id"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -654,8 +782,12 @@
             },
             "Indices": {},
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "drill_down": "Port",
+                        "route": "/view/Port?filter=ports"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -727,8 +859,20 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S014_Country",
+                        "route": "/view/S014_Country?filter=country_id"
+                    },
+                    {
+                        "drill_down": "Manifest",
+                        "route": "/view/Manifest?filter=manifests"
+                    },
+                    {
+                        "drill_down": "Manifest",
+                        "route": "/view/Manifest?filter=consigned_manifests"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -767,8 +911,12 @@
             },
             "Indices": {},
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "drill_down": "LineItem",
+                        "route": "/view/LineItem?filter=line_items"
+                    }
+                ],
                 "Statistics": []
             }
         },
@@ -826,10 +974,96 @@
                 ]
             },
             "Menus": {
-                "Main": [],
-                "DrillDown": [],
+                "Context": [
+                    {
+                        "related_table": "S003_Commodity",
+                        "route": "/view/S003_Commodity?filter=commodity_id"
+                    },
+                    {
+                        "related_table": "S004_PackType",
+                        "route": "/view/S004_PackType?filter=pack_type_id"
+                    },
+                    {
+                        "related_table": "S015_Client",
+                        "route": "/view/S015_Client?filter=client_id"
+                    }
+                ],
                 "Statistics": []
             }
         }
+    },
+    "Menus": {
+        "Main": [
+            {
+                "table": "Manifest",
+                "route": "/view/Manifest"
+            },
+            {
+                "table": "LineItem",
+                "route": "/view/LineItem"
+            },
+            {
+                "table": "Commodity",
+                "route": "/view/Commodity"
+            },
+            {
+                "table": "PackType",
+                "route": "/view/PackType"
+            },
+            {
+                "table": "Container",
+                "route": "/view/Container"
+            },
+            {
+                "table": "ContainerHistory",
+                "route": "/view/ContainerHistory"
+            },
+            {
+                "table": "ContainerStatus",
+                "route": "/view/ContainerStatus"
+            },
+            {
+                "table": "ShippingCompany",
+                "route": "/view/ShippingCompany"
+            },
+            {
+                "table": "Vessel",
+                "route": "/view/Vessel"
+            },
+            {
+                "table": "Voyage",
+                "route": "/view/Voyage"
+            },
+            {
+                "table": "Leg",
+                "route": "/view/Leg"
+            },
+            {
+                "table": "Port",
+                "route": "/view/Port"
+            },
+            {
+                "table": "PortPair",
+                "route": "/view/PortPair"
+            },
+            {
+                "table": "Country",
+                "route": "/view/Country"
+            },
+            {
+                "table": "Client",
+                "route": "/view/Client"
+            },
+            {
+                "table": "User",
+                "route": "/view/User"
+            },
+            {
+                "table": "Rate",
+                "route": "/view/Rate"
+            }
+        ],
+        "Context": {},
+        "Statistics": {}
     }
 }
