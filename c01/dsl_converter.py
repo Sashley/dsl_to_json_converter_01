@@ -1,0 +1,99 @@
+import json
+import re
+from collections import defaultdict
+
+# Input and output files
+input_file = "shipping_modules_03.dsl"
+output_file = "shipping_converted.json"
+
+DEFAULT_PARAMS = {
+    "nullable": True,
+    "default": None,
+    "unique": False
+}
+
+def parse_foreign_key(ref_part, model_map):
+    """Parse foreign key references."""
+    match = re.search(r'ref: > (\w+)\.(\w+)', ref_part)
+    if match:
+        target_model, target_field = match.groups()
+        return model_map.get(target_model, target_model), target_field
+    return None, None
+
+def first_pass_create_model_map(file_path):
+    """First pass: Create a mapping of table names to prefixed names."""
+    model_map = {}
+    model_counter = 1
+    with open(file_path, "r") as file:
+        for line in file:
+            line = line.strip()
+            if line.startswith("table"):
+                table_name = line.split()[1]
+                model_map[table_name] = f"S{model_counter:03}_{table_name}"
+                model_counter += 1
+    return model_map
+
+def second_pass_generate_models(file_path, model_map):
+    """Second pass: Process fields, foreign keys, menus, and indices."""
+    result = {"version": "1.0", "Models": {}}
+    relationships = defaultdict(list)  # Track reverse relationships for drill downs
+    current_model = None
+
+    with open(file_path, "r") as file:
+        for line in file:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+
+            if line.startswith("table"):
+                table_name = line.split()[1]
+                prefixed_name = model_map[table_name]
+                current_model = {"Fields": {}, "Indices": {}, "Menus": {"Main": [], "DrillDown": [], "Statistics": []}}
+                result["Models"][prefixed_name] = current_model
+
+            elif current_model:
+                parts = line.split(maxsplit=2)
+                if len(parts) < 2:
+                    continue  # Skip invalid or incomplete lines
+                field_name, field_type = parts[0], parts[1]
+                field_def = {"type": "Integer" if "Int" in field_type else "String"}
+
+                if "pk" in field_type:
+                    field_def["primary_key"] = True
+                    field_def["nullable"] = False
+
+                if len(parts) == 3:  # Handle foreign keys
+                    target_model, target_field = parse_foreign_key(parts[2], model_map)
+                    if target_model and target_field:
+                        field_def["foreign_key"] = f"{target_model}.{target_field}"
+                        field_def["nullable"] = True  # Allow nullable foreign keys
+
+                if "primary_key" not in field_def and "foreign_key" not in field_def:
+                    field_def.update(DEFAULT_PARAMS)
+
+                current_model["Fields"][field_name] = field_def
+
+
+    # Add connected menus and statistics based on relationships
+    for model, related_models in relationships.items():
+        if model in result["Models"]:
+            for related in related_models:
+                result["Models"][model]["Menus"]["DrillDown"].append(f"Connected: {related}")
+
+    # Generate indices for foreign keys
+    for model, data in result["Models"].items():
+        for field, details in data["Fields"].items():
+            if "foreign_key" in details:
+                data["Indices"][f"idx_{field}"] = [field]
+
+    return result
+
+# Main processing
+model_map = first_pass_create_model_map(input_file)
+dsl_json = second_pass_generate_models(input_file, model_map)
+
+# Write to output JSON
+with open(output_file, "w") as f:
+    json.dump(dsl_json, f, indent=4)
+
+print(f"DSL converted and saved to {output_file}")

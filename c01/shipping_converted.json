@@ -1,0 +1,835 @@
+{
+    "version": "1.0",
+    "Models": {
+        "S001_Manifest": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "bill_of_lading": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "shipper_id": {
+                    "type": "Integer",
+                    "foreign_key": "S015_Client.id",
+                    "nullable": true
+                },
+                "consignee_id": {
+                    "type": "Integer",
+                    "foreign_key": "S015_Client.id",
+                    "nullable": true
+                },
+                "vessel_id": {
+                    "type": "Integer",
+                    "foreign_key": "S009_Vessel.id",
+                    "nullable": true
+                },
+                "voyage_id": {
+                    "type": "Integer",
+                    "foreign_key": "S010_Voyage.id",
+                    "nullable": true
+                },
+                "port_of_loading_id": {
+                    "type": "Integer",
+                    "foreign_key": "S012_Port.id",
+                    "nullable": true
+                },
+                "port_of_discharge_id": {
+                    "type": "Integer",
+                    "foreign_key": "S012_Port.id",
+                    "nullable": true
+                },
+                "place_of_delivery": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "place_of_receipt": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "clauses": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "date_of_receipt": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "line_items": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_shipper_id": [
+                    "shipper_id"
+                ],
+                "idx_consignee_id": [
+                    "consignee_id"
+                ],
+                "idx_vessel_id": [
+                    "vessel_id"
+                ],
+                "idx_voyage_id": [
+                    "voyage_id"
+                ],
+                "idx_port_of_loading_id": [
+                    "port_of_loading_id"
+                ],
+                "idx_port_of_discharge_id": [
+                    "port_of_discharge_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S002_LineItem": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "manifest_id": {
+                    "type": "Integer",
+                    "foreign_key": "S001_Manifest.id",
+                    "nullable": true
+                },
+                "description": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "quantity": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "weight": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "volume": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "pack_type_id": {
+                    "type": "Integer",
+                    "foreign_key": "S004_PackType.id",
+                    "nullable": true
+                },
+                "commodity_id": {
+                    "type": "Integer",
+                    "foreign_key": "S003_Commodity.id",
+                    "nullable": true
+                },
+                "container_id": {
+                    "type": "Integer",
+                    "foreign_key": "S005_Container.id",
+                    "nullable": true
+                }
+            },
+            "Indices": {
+                "idx_manifest_id": [
+                    "manifest_id"
+                ],
+                "idx_pack_type_id": [
+                    "pack_type_id"
+                ],
+                "idx_commodity_id": [
+                    "commodity_id"
+                ],
+                "idx_container_id": [
+                    "container_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S003_Commodity": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "description": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "line_items": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {},
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S004_PackType": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "description": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "line_items": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {},
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S005_Container": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "number": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "port_id": {
+                    "type": "Integer",
+                    "foreign_key": "S012_Port.id",
+                    "nullable": true
+                },
+                "updated": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "line_items": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "container_histories": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_port_id": [
+                    "port_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S006_ContainerHistory": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "container_id": {
+                    "type": "Integer",
+                    "foreign_key": "S005_Container.id",
+                    "nullable": true
+                },
+                "port_id": {
+                    "type": "Integer",
+                    "foreign_key": "S012_Port.id",
+                    "nullable": true
+                },
+                "client_id": {
+                    "type": "Integer",
+                    "foreign_key": "S015_Client.id",
+                    "nullable": true
+                },
+                "container_status_id": {
+                    "type": "Integer",
+                    "foreign_key": "S007_ContainerStatus.id",
+                    "nullable": true
+                },
+                "damage": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "updated": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_container_id": [
+                    "container_id"
+                ],
+                "idx_port_id": [
+                    "port_id"
+                ],
+                "idx_client_id": [
+                    "client_id"
+                ],
+                "idx_container_status_id": [
+                    "container_status_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S007_ContainerStatus": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "description": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "container_histories": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {},
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S008_ShippingCompany": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "vessels": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {},
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S009_Vessel": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "shipping_company_id": {
+                    "type": "Integer",
+                    "foreign_key": "S008_ShippingCompany.id",
+                    "nullable": true
+                },
+                "manifests": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_shipping_company_id": [
+                    "shipping_company_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S010_Voyage": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "vessel_id": {
+                    "type": "Integer",
+                    "foreign_key": "S009_Vessel.id",
+                    "nullable": true
+                },
+                "rotation_number": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "legs": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "manifests": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_vessel_id": [
+                    "vessel_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S011_Leg": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "voyage_id": {
+                    "type": "Integer",
+                    "foreign_key": "S010_Voyage.id",
+                    "nullable": true
+                },
+                "port_id": {
+                    "type": "Integer",
+                    "foreign_key": "S012_Port.id",
+                    "nullable": true
+                },
+                "leg_number": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "eta": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "etd": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_voyage_id": [
+                    "voyage_id"
+                ],
+                "idx_port_id": [
+                    "port_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S012_Port": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "country": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "prefix": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "containers": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {},
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S013_PortPair": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "pol_id": {
+                    "type": "Integer",
+                    "foreign_key": "S012_Port.id",
+                    "nullable": true
+                },
+                "pod_id": {
+                    "type": "Integer",
+                    "foreign_key": "S012_Port.id",
+                    "nullable": true
+                },
+                "distance": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_pol_id": [
+                    "pol_id"
+                ],
+                "idx_pod_id": [
+                    "pod_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S014_Country": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "ports": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {},
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S015_Client": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "address": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "town": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "country_id": {
+                    "type": "Integer",
+                    "foreign_key": "S014_Country.id",
+                    "nullable": true
+                },
+                "contact_person": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "email": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "phone": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "manifests": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "consigned_manifests": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_country_id": [
+                    "country_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S016_User": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "name": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "email": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "password_hash": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "line_items": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {},
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        },
+        "S017_Rate": {
+            "Fields": {
+                "id": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "distance": {
+                    "type": "Integer",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "commodity_id": {
+                    "type": "Integer",
+                    "foreign_key": "S003_Commodity.id",
+                    "nullable": true
+                },
+                "pack_type_id": {
+                    "type": "Integer",
+                    "foreign_key": "S004_PackType.id",
+                    "nullable": true
+                },
+                "client_id": {
+                    "type": "Integer",
+                    "foreign_key": "S015_Client.id",
+                    "nullable": true
+                },
+                "rate": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                },
+                "effective": {
+                    "type": "String",
+                    "nullable": true,
+                    "default": null,
+                    "unique": false
+                }
+            },
+            "Indices": {
+                "idx_commodity_id": [
+                    "commodity_id"
+                ],
+                "idx_pack_type_id": [
+                    "pack_type_id"
+                ],
+                "idx_client_id": [
+                    "client_id"
+                ]
+            },
+            "Menus": {
+                "Main": [],
+                "DrillDown": [],
+                "Statistics": []
+            }
+        }
+    }
+}
