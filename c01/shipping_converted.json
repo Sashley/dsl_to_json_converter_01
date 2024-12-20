@@ -11,9 +11,9 @@
                 },
                 "bill_of_lading": {
                     "type": "String",
+                    "unique": true,
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "shipper_id": {
                     "type": "Integer",
@@ -48,32 +48,22 @@
                 "place_of_delivery": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "place_of_receipt": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "clauses": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "date_of_receipt": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "line_items": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {
@@ -146,26 +136,22 @@
                 "description": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "quantity": {
                     "type": "Integer",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "weight": {
                     "type": "Integer",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "volume": {
                     "type": "Integer",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "pack_type_id": {
                     "type": "Integer",
@@ -230,20 +216,12 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "description": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "line_items": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {},
@@ -268,20 +246,12 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "description": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "line_items": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {},
@@ -306,8 +276,7 @@
                 "number": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "port_id": {
                     "type": "Integer",
@@ -317,20 +286,7 @@
                 "updated": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "line_items": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "container_histories": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {
@@ -387,14 +343,12 @@
                 "damage": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "updated": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {
@@ -444,20 +398,12 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "description": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "container_histories": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {},
@@ -482,14 +428,7 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "vessels": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {},
@@ -514,15 +453,9 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "shipping_company_id": {
-                    "type": "Integer",
-                    "foreign_key": "S008_ShippingCompany.id",
-                    "nullable": true
-                },
-                "manifests": {
                     "type": "Integer",
                     "foreign_key": "S008_ShippingCompany.id",
                     "nullable": true
@@ -531,9 +464,6 @@
             "Indices": {
                 "idx_shipping_company_id": [
                     "shipping_company_id"
-                ],
-                "idx_manifests": [
-                    "manifests"
                 ]
             },
             "Menus": {
@@ -561,8 +491,7 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "vessel_id": {
                     "type": "Integer",
@@ -572,20 +501,7 @@
                 "rotation_number": {
                     "type": "Integer",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "legs": {
-                    "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "manifests": {
-                    "type": "Integer",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {
@@ -632,20 +548,17 @@
                 "leg_number": {
                     "type": "Integer",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "eta": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "etd": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {
@@ -681,26 +594,17 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "country": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "prefix": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "containers": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {},
@@ -735,8 +639,7 @@
                 "distance": {
                     "type": "Integer",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {
@@ -772,14 +675,7 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "ports": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {},
@@ -804,20 +700,17 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "address": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "town": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "country_id": {
                     "type": "Integer",
@@ -827,32 +720,17 @@
                 "contact_person": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "email": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "phone": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "manifests": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "consigned_manifests": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {
@@ -889,26 +767,17 @@
                 "name": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "email": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "password_hash": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
-                },
-                "line_items": {
-                    "type": "String",
-                    "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {},
@@ -933,8 +802,7 @@
                 "distance": {
                     "type": "Integer",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "commodity_id": {
                     "type": "Integer",
@@ -954,14 +822,12 @@
                 "rate": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 },
                 "effective": {
                     "type": "String",
                     "nullable": true,
-                    "default": null,
-                    "unique": false
+                    "default": null
                 }
             },
             "Indices": {

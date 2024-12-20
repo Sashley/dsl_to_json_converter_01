@@ -1,6 +1,6 @@
     table Manifest {
       id Int [pk, increment]
-      bill_of_lading String
+      bill_of_lading String [unique]
       shipper_id Int [ref: > Client.id]
       consignee_id Int [ref: > Client.id]
       vessel_id Int [ref: > Vessel.id]

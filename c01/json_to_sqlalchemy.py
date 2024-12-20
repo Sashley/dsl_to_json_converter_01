@@ -1,5 +1,5 @@
 import json
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float, DateTime, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float, DateTime, Text, Index
 from sqlalchemy.orm import declarative_base, relationship
 
 # Mapping from JSON field types to SQLAlchemy column types
@@ -12,7 +12,7 @@ TYPE_MAPPING = {
     "Text": Text
 }
 
-def create_model(name, fields, base_cls=None):
+def create_model(name, model_data, base_cls=None):
     """
     Dynamically create a SQLAlchemy model class.
     
@@ -31,7 +31,10 @@ def create_model(name, fields, base_cls=None):
     
     relationships = {}
     has_primary_key = False
+    columns = {}  # Store columns temporarily to reference in relationships
 
+    fields = model_data["Fields"]
+    # First pass: create all columns
     for field_name, field_def in fields.items():
         column_args = []
 
@@ -47,10 +50,6 @@ def create_model(name, fields, base_cls=None):
         # Handle foreign key
         if field_def.get("foreign_key"):
             column_args.append(ForeignKey(field_def["foreign_key"]))
-            # Extract relationship name from foreign key
-            related_table = field_def["foreign_key"].split('.')[0]
-            relationship_name = f"{field_name}_rel"
-            relationships[relationship_name] = relationship(related_table)
 
         # Add constraints
         column_kwargs = {}
@@ -65,8 +64,26 @@ def create_model(name, fields, base_cls=None):
         # Handle nullable
         column_kwargs["nullable"] = field_def.get("nullable", True)
 
+        # Handle unique constraint
+        if field_def.get("unique", False):
+            column_kwargs["unique"] = True
+
         # Create column
-        attrs[field_name] = Column(*column_args, **column_kwargs)
+        column = Column(*column_args, **column_kwargs)
+        attrs[field_name] = column
+        columns[field_name] = column
+
+    # Second pass: create relationships with explicit foreign keys
+    for field_name, field_def in fields.items():
+        if field_def.get("foreign_key"):
+            # Extract relationship name from foreign key
+            related_table = field_def["foreign_key"].split('.')[0]
+            relationship_name = f"{field_name}_rel"
+            # Create relationship with explicit foreign key
+            relationships[relationship_name] = relationship(
+                related_table,
+                foreign_keys=[columns[field_name]]
+            )
 
     # Add relationships
     attrs.update(relationships)
@@ -74,8 +91,18 @@ def create_model(name, fields, base_cls=None):
     if not has_primary_key:
         raise ValueError(f"Table '{name}' must have at least one primary key.")
 
-    # Dynamically create a class
-    return type(name, (base_cls,), attrs)
+    # Create the model class
+    model = type(name, (base_cls,), attrs)
+
+    # Add indexes if defined
+    if "Indices" in model_data:
+        for index_name, index_columns in model_data["Indices"].items():
+            Index(
+                index_name,
+                *[getattr(model, col_name) for col_name in index_columns],
+            )
+
+    return model
 
 def load_json_to_models(json_file, base_cls=None):
     """
@@ -90,7 +117,7 @@ def load_json_to_models(json_file, base_cls=None):
 
     models = {}
     for model_name, model_data in data["Models"].items():
-        model = create_model(model_name, model_data["Fields"], base_cls)
+        model = create_model(model_name, model_data, base_cls)
         models[model_name] = model
 
     return models

@@ -9,7 +9,6 @@ output_file = "shipping_converted.json"
 DEFAULT_PARAMS = {
     "nullable": True,
     "default": None,
-    "unique": False
 }
 
 def parse_foreign_key(ref_part, model_map):
@@ -60,26 +59,35 @@ def second_pass_generate_models(file_path, model_map):
 
             elif current_model:
                 parts = line.split(maxsplit=2)
-                print('parts: ', parts)
+                # print('parts: ', parts)
                 if len(parts) < 2:
                     continue  # Skip invalid or incomplete lines
                 field_name, field_type = parts[0], parts[1]
-                print('field type: ', field_type, ' len parts: ', len(parts))
-                if not "[]" in field_type:
-                    field_def = {"type": "Integer" if "Int" in field_type else "String"}
 
-                # Check for primary key
-                # if "[pk" in field_type:
-                #     field_def["primary_key"] = True
-                #     field_def["nullable"] = False
+                # Handle one-to-many relationships (type ending with []) first
+                if "[]" in field_type and len(parts) == 3:
+                    # Ensure valid drill-down reference exists in parts[2]
+                    print('field type: ', field_type)
+                    match = re.search(r'(\w+)\[\]', field_type)
+                    if match:
+                        related_table = match.group(1)  # Extract related table name
+                        current_model["Menus"]["Context"].append(
+                            {"drill_down": related_table, "route": f"/view/{related_table}?filter={field_name}"}
+                        )
+                    continue  # Skip regular field processing for array types
 
-                # Handle foreign keys
+                # Process regular fields
+                field_def = {"type": "Integer" if "Int" in field_type else "String"}
+
+                # Handle field attributes
                 if len(parts) == 3:
                     if "[pk" in parts[2]:
                         field_def["primary_key"] = True
                         field_def["nullable"] = False
                     if "increment" in parts[2]:
                         field_def["auto_increment"] = True
+                    if "unique" in parts[2]:
+                        field_def["unique"] = True
                     target_model, target_field = parse_foreign_key(parts[2], model_map)
                     if target_model and target_field:
                         field_def["foreign_key"] = f"{target_model}.{target_field}"
@@ -90,21 +98,12 @@ def second_pass_generate_models(file_path, model_map):
                             {"related_table": target_model, "route": f"/view/{target_model}?filter={field_name}"}
                         )
 
-                # Handle one-to-many relationships (type ending with [])
-                if "[]" in field_type and len(parts) == 3:
-                    # Ensure valid drill-down reference exists in parts[2]
-                    match = re.search(r'(\w+)\[\]', field_type)
-                    if match:
-                        related_table = match.group(1)  # Extract related table name
-                        current_model["Menus"]["Context"].append(
-                            {"drill_down": related_table, "route": f"/view/{related_table}?filter={field_name}"}
-                        )
-
                 # Add default parameters for non-primary, non-foreign fields
                 if "primary_key" not in field_def and "foreign_key" not in field_def:
                     field_def.update(DEFAULT_PARAMS)
-
+                
                 current_model["Fields"][field_name] = field_def
+                print('field def: ', field_def)
 
     # Add indices for foreign keys
     for model, data in result["Models"].items():
