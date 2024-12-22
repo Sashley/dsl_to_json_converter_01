@@ -37,7 +37,7 @@ class TestJSONToSQLAlchemy(unittest.TestCase):
 
         # Validate foreign keys
         foreign_keys = {fk.target_fullname for fk in manifest.__table__.foreign_keys}
-        expected_foreign_keys = {"S015_Client.id", "S015_Client.id"}
+        expected_foreign_keys = {"s015_client.id", "s015_client.id"}
         self.assertTrue(expected_foreign_keys.issubset(foreign_keys), "Foreign keys not correctly set.")
 
     def test_primary_keys(self):

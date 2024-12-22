@@ -90,7 +90,7 @@ def second_pass_generate_models(file_path, model_map):
                         field_def["unique"] = True
                     target_model, target_field = parse_foreign_key(parts[2], model_map)
                     if target_model and target_field:
-                        field_def["foreign_key"] = f"{target_model}.{target_field}"
+                        field_def["foreign_key"] = f"{target_model}.{target_field}".lower()
                         field_def["nullable"] = True
 
                         # Context menu link for related table

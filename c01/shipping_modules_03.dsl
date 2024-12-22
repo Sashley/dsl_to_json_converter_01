@@ -100,7 +100,7 @@
     table Port {
       id Int [pk, increment]
       name String
-      country String
+      country_id Int [ref: > Country.id]
       prefix String
       containers Container[] [relationship: "one-to-many", back_populates: "port"]
     }
@@ -110,6 +110,7 @@
       pol_id Int [ref: > Port.id]
       pod_id Int [ref: > Port.id]
       distance Int
+      distance_rate_code int
     }
 
     table Country {
@@ -141,7 +142,7 @@
 
     table Rate {
       id Int [pk, increment]
-      distance Int
+      distance_rate_code Int
       commodity_id Int [ref: > Commodity.id]
       pack_type_id Int [ref: > PackType.id]
       client_id Int [ref: > Client.id]
