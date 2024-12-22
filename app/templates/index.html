@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-sm rounded-lg p-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">Welcome to Shipping App</h1>
+    <p class="text-gray-600 mb-4">
+        Manage your shipping operations efficiently with our modern, HTMX-powered interface.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+        <!-- Cards will be added here for different shipping operations -->
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">Shipping Management</h2>
+            <p class="text-gray-600 mb-4">Create and manage shipping records with ease.</p>
+            <button 
+                class="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                hx-get="/shipping"
+                hx-target="#content"
+                hx-push-url="true">
+                Manage Shipping
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="content" class="mt-6">
+    <!-- HTMX content will be loaded here -->
+</div>
+{% endblock %}
+
+{% block year %}2024{% endblock %}

@@ -2,10 +2,6 @@ import json
 import re
 from collections import defaultdict
 
-# Input and output files
-input_file = "shipping_modules_03.dsl"
-output_file = "shipping_converted.json"
-
 DEFAULT_PARAMS = {
     "nullable": True,
     "default": None,
@@ -113,12 +109,13 @@ def second_pass_generate_models(file_path, model_map):
 
     return result
 
-# Main processing
-model_map = first_pass_create_model_map(input_file)
-dsl_json = second_pass_generate_models(input_file, model_map)
+def convert_dsl_to_json(input_file, output_file):
+    """Convert DSL file to JSON format."""
+    model_map = first_pass_create_model_map(input_file)
+    dsl_json = second_pass_generate_models(input_file, model_map)
 
-# Write to output JSON
-with open(output_file, "w") as f:
-    json.dump(dsl_json, f, indent=4)
-
-print(f"DSL converted and saved to {output_file}")
+    # Write to output JSON
+    with open(output_file, "w") as f:
+        json.dump(dsl_json, f, indent=4)
+    
+    return dsl_json

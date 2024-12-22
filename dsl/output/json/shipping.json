@@ -17,32 +17,32 @@
                 },
                 "shipper_id": {
                     "type": "Integer",
-                    "foreign_key": "S015_Client.id",
+                    "foreign_key": "s015_client.id",
                     "nullable": true
                 },
                 "consignee_id": {
                     "type": "Integer",
-                    "foreign_key": "S015_Client.id",
+                    "foreign_key": "s015_client.id",
                     "nullable": true
                 },
                 "vessel_id": {
                     "type": "Integer",
-                    "foreign_key": "S009_Vessel.id",
+                    "foreign_key": "s009_vessel.id",
                     "nullable": true
                 },
                 "voyage_id": {
                     "type": "Integer",
-                    "foreign_key": "S010_Voyage.id",
+                    "foreign_key": "s010_voyage.id",
                     "nullable": true
                 },
                 "port_of_loading_id": {
                     "type": "Integer",
-                    "foreign_key": "S012_Port.id",
+                    "foreign_key": "s012_port.id",
                     "nullable": true
                 },
                 "port_of_discharge_id": {
                     "type": "Integer",
-                    "foreign_key": "S012_Port.id",
+                    "foreign_key": "s012_port.id",
                     "nullable": true
                 },
                 "place_of_delivery": {
@@ -61,7 +61,7 @@
                     "default": null
                 },
                 "date_of_receipt": {
-                    "type": "DateTime",
+                    "type": "String",
                     "nullable": true,
                     "default": null
                 }
@@ -130,7 +130,7 @@
                 },
                 "manifest_id": {
                     "type": "Integer",
-                    "foreign_key": "S001_Manifest.id",
+                    "foreign_key": "s001_manifest.id",
                     "nullable": true
                 },
                 "description": {
@@ -155,17 +155,17 @@
                 },
                 "pack_type_id": {
                     "type": "Integer",
-                    "foreign_key": "S004_PackType.id",
+                    "foreign_key": "s004_packtype.id",
                     "nullable": true
                 },
                 "commodity_id": {
                     "type": "Integer",
-                    "foreign_key": "S003_Commodity.id",
+                    "foreign_key": "s003_commodity.id",
                     "nullable": true
                 },
                 "container_id": {
                     "type": "Integer",
-                    "foreign_key": "S005_Container.id",
+                    "foreign_key": "s005_container.id",
                     "nullable": true
                 }
             },
@@ -280,11 +280,11 @@
                 },
                 "port_id": {
                     "type": "Integer",
-                    "foreign_key": "S012_Port.id",
+                    "foreign_key": "s012_port.id",
                     "nullable": true
                 },
                 "updated": {
-                    "type": "DateTime",
+                    "type": "String",
                     "nullable": true,
                     "default": null
                 }
@@ -322,22 +322,22 @@
                 },
                 "container_id": {
                     "type": "Integer",
-                    "foreign_key": "S005_Container.id",
+                    "foreign_key": "s005_container.id",
                     "nullable": true
                 },
                 "port_id": {
                     "type": "Integer",
-                    "foreign_key": "S012_Port.id",
+                    "foreign_key": "s012_port.id",
                     "nullable": true
                 },
                 "client_id": {
                     "type": "Integer",
-                    "foreign_key": "S015_Client.id",
+                    "foreign_key": "s015_client.id",
                     "nullable": true
                 },
                 "container_status_id": {
                     "type": "Integer",
-                    "foreign_key": "S007_ContainerStatus.id",
+                    "foreign_key": "s007_containerstatus.id",
                     "nullable": true
                 },
                 "damage": {
@@ -346,7 +346,7 @@
                     "default": null
                 },
                 "updated": {
-                    "type": "DateTime",
+                    "type": "String",
                     "nullable": true,
                     "default": null
                 }
@@ -457,7 +457,7 @@
                 },
                 "shipping_company_id": {
                     "type": "Integer",
-                    "foreign_key": "S008_ShippingCompany.id",
+                    "foreign_key": "s008_shippingcompany.id",
                     "nullable": true
                 }
             },
@@ -495,7 +495,7 @@
                 },
                 "vessel_id": {
                     "type": "Integer",
-                    "foreign_key": "S009_Vessel.id",
+                    "foreign_key": "s009_vessel.id",
                     "nullable": true
                 },
                 "rotation_number": {
@@ -537,12 +537,12 @@
                 },
                 "voyage_id": {
                     "type": "Integer",
-                    "foreign_key": "S010_Voyage.id",
+                    "foreign_key": "s010_voyage.id",
                     "nullable": true
                 },
                 "port_id": {
                     "type": "Integer",
-                    "foreign_key": "S012_Port.id",
+                    "foreign_key": "s012_port.id",
                     "nullable": true
                 },
                 "leg_number": {
@@ -551,12 +551,12 @@
                     "default": null
                 },
                 "eta": {
-                    "type": "DateTime",
+                    "type": "String",
                     "nullable": true,
                     "default": null
                 },
                 "etd": {
-                    "type": "DateTime",
+                    "type": "String",
                     "nullable": true,
                     "default": null
                 }
@@ -598,7 +598,7 @@
                 },
                 "country_id": {
                     "type": "Integer",
-                    "foreign_key": "S014_Country.id",
+                    "foreign_key": "s014_country.id",
                     "nullable": true
                 },
                 "prefix": {
@@ -636,12 +636,12 @@
                 },
                 "pol_id": {
                     "type": "Integer",
-                    "foreign_key": "S012_Port.id",
+                    "foreign_key": "s012_port.id",
                     "nullable": true
                 },
                 "pod_id": {
                     "type": "Integer",
-                    "foreign_key": "S012_Port.id",
+                    "foreign_key": "s012_port.id",
                     "nullable": true
                 },
                 "distance": {
@@ -727,7 +727,7 @@
                 },
                 "country_id": {
                     "type": "Integer",
-                    "foreign_key": "S014_Country.id",
+                    "foreign_key": "s014_country.id",
                     "nullable": true
                 },
                 "contact_person": {
@@ -819,26 +819,26 @@
                 },
                 "commodity_id": {
                     "type": "Integer",
-                    "foreign_key": "S003_Commodity.id",
+                    "foreign_key": "s003_commodity.id",
                     "nullable": true
                 },
                 "pack_type_id": {
                     "type": "Integer",
-                    "foreign_key": "S004_PackType.id",
+                    "foreign_key": "s004_packtype.id",
                     "nullable": true
                 },
                 "client_id": {
                     "type": "Integer",
-                    "foreign_key": "S015_Client.id",
+                    "foreign_key": "s015_client.id",
                     "nullable": true
                 },
                 "rate": {
-                    "type": "Float",
+                    "type": "String",
                     "nullable": true,
                     "default": null
                 },
                 "effective": {
-                    "type": "DateTime",
+                    "type": "String",
                     "nullable": true,
                     "default": null
                 }
