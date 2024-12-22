@@ -117,16 +117,68 @@ def populate_data():
         ]
         session.add_all(statuses)
 
-        clients = [
-            S015_Client(
-                name=f"Client_{i}", address=f"{random.randint(100, 999)} Market Street",
-                town=random.choice(["Los Angeles", "Rotterdam", "Shanghai", "Mumbai", "Hamburg"]),
-                country_id=random.randint(1, len(countries)), 
-                contact_person=f"Contact_{i}", email=f"client_{i}@shipping.com", 
-                phone=f"+123456789{i:02d}"
-            )
-            for i in range(300)
+        # Company name components for generating realistic business names
+        company_prefixes = ["Global", "Inter", "Trans", "Pacific", "Atlantic", "Euro", "Asian", "United", "International", "Premier"]
+        company_types = ["Logistics", "Trading", "Imports", "Exports", "Freight", "Supply Chain", "Distribution", "Shipping", "Cargo", "Transport"]
+        company_suffixes = ["Corp", "Ltd", "Inc", "Group", "Holdings", "Solutions", "Services", "International", "Enterprises", "Partners"]
+        
+        # Street names for realistic addresses
+        street_types = ["Street", "Avenue", "Boulevard", "Road", "Lane", "Drive", "Way", "Plaza", "Court", "Park"]
+        street_names = ["Commerce", "Industry", "Trade", "Harbor", "Port", "Maritime", "Shipping", "Business", "Enterprise", "Corporate"]
+        
+        # First and last names for contact persons
+        first_names = ["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Christopher",
+                      "Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Karen"]
+        last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
+                     "Anderson", "Taylor", "Thomas", "Moore", "Jackson", "Martin", "Lee", "Thompson", "White", "Harris"]
+
+        # Cities with their corresponding country IDs
+        city_country_mapping = [
+            ("Los Angeles", 1), ("San Francisco", 1), ("New York", 1),  # USA
+            ("Rotterdam", 2), ("Amsterdam", 2), ("Antwerp", 2),  # Netherlands
+            ("Shanghai", 3), ("Shenzhen", 3), ("Guangzhou", 3),  # China
+            ("Mumbai", 4), ("Chennai", 4), ("Kolkata", 4),  # India
+            ("Hamburg", 5), ("Bremen", 5), ("Düsseldorf", 5),  # Germany
         ]
+
+        clients = []
+        for i in range(300):
+            # Generate company name
+            company_name = f"{random.choice(company_prefixes)} {random.choice(company_types)} {random.choice(company_suffixes)}"
+            
+            # Generate address
+            street_number = random.randint(1, 999)
+            street = f"{random.choice(street_names)} {random.choice(street_types)}"
+            
+            # Select city and corresponding country
+            city, country_id = random.choice(city_country_mapping)
+            
+            # Generate contact person
+            contact_first = random.choice(first_names)
+            contact_last = random.choice(last_names)
+            contact_person = f"{contact_first} {contact_last}"
+            
+            # Generate business email
+            email_domain = company_name.lower().split()[0] + ".com"
+            email = f"{contact_first.lower()}.{contact_last.lower()}@{email_domain}"
+            
+            # Generate international phone number based on country
+            country_codes = {1: "1", 2: "31", 3: "86", 4: "91", 5: "49"}  # USA, Netherlands, China, India, Germany
+            area_code = random.randint(100, 999)
+            local_number = random.randint(1000000, 9999999)
+            phone = f"+{country_codes[country_id]} {area_code} {local_number}"
+            
+            client = S015_Client(
+                name=company_name,
+                address=f"{street_number} {street}",
+                town=city,
+                country_id=country_id,
+                contact_person=contact_person,
+                email=email,
+                phone=phone
+            )
+            clients.append(client)
+        
         session.add_all(clients)
 
         commodities = [
@@ -179,6 +231,32 @@ def populate_data():
             for _ in range(100)
         ]
         session.add_all(voyages)
+        session.flush()  # Ensure voyages have IDs for leg creation
+
+        # Create legs for each voyage
+        legs = []
+        for voyage in voyages:
+            # Generate 3-7 legs per voyage
+            num_legs = random.randint(3, 7)
+            # Create a sequence of ports for this voyage
+            voyage_ports = random.sample(ports, num_legs + 1)  # +1 because we need arrival and departure ports
+            
+            for leg_num in range(num_legs):
+                # Calculate dates ensuring they progress logically
+                base_date = datetime.now() - timedelta(days=random.randint(0, 30))
+                arrival_date = base_date + timedelta(days=leg_num * 3)  # 3 days between port calls
+                departure_date = arrival_date + timedelta(days=1)  # 1 day at port
+                
+                legs.append(
+                    S011_Leg(
+                        voyage_id=voyage.id,
+                        leg_number=leg_num + 1,  # Start from 1
+                        port_id=voyage_ports[leg_num].id,
+                        eta=arrival_date.strftime("%Y-%m-%d %H:%M:%S"),
+                        etd=departure_date.strftime("%Y-%m-%d %H:%M:%S")
+                    )
+                )
+        session.add_all(legs)
 
         # Populate Level 4
         containers = [
@@ -214,10 +292,18 @@ def populate_data():
         # Create manifests with proper bill of lading numbers
         manifests = []
         for _ in range(200):
-            # Get random voyage, ports
+            # Get random voyage and its legs
             voyage = session.query(S010_Voyage).get(random.randint(1, len(voyages)))
-            pol = session.query(S012_Port).get(random.randint(1, len(ports)))
-            pod = session.query(S012_Port).get(random.randint(1, len(ports)))
+            voyage_legs = session.query(S011_Leg).filter_by(voyage_id=voyage.id).order_by(S011_Leg.leg_number).all()
+            
+            # Select a random leg pair for loading and discharge
+            leg_idx = random.randint(0, len(voyage_legs) - 2)  # Ensure we have a next leg for discharge
+            loading_leg = voyage_legs[leg_idx]
+            discharge_leg = voyage_legs[leg_idx + 1]
+            
+            # Use the leg's ports for POL and POD
+            pol = session.query(S012_Port).get(loading_leg.port_id)
+            pod = session.query(S012_Port).get(discharge_leg.port_id)
             
             # Generate unique bill of lading
             bl_number = generate_bill_of_lading(voyage, pol, pod, sequence_counters)
@@ -265,7 +351,7 @@ def populate_data():
                 commodity_id=random.randint(1, len(commodities)),
                 pack_type_id=random.randint(1, len(packtypes)),
                 client_id=random.randint(1, len(clients)),
-                rate=str(random.uniform(500.0, 5000.0)),
+                rate=str(random.randint(15, 200)),
                 effective=datetime.now().strftime("%Y-%m-%d")
             )
             for _ in range(300)
