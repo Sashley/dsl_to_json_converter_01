@@ -1,32 +1,84 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="bg-white shadow-sm rounded-lg p-6">
-    <h1 class="text-2xl font-bold text-gray-900 mb-4">Welcome to Shipping App</h1>
-    <p class="text-gray-600 mb-4">
-        Manage your shipping operations efficiently with our modern, HTMX-powered interface.
-    </p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        <!-- Cards will be added here for different shipping operations -->
-        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">Shipping Management</h2>
-            <p class="text-gray-600 mb-4">Create and manage shipping records with ease.</p>
-            <button 
-                class="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-                hx-get="/shipping"
-                hx-target="#content"
-                hx-push-url="true">
-                Manage Shipping
-            </button>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Shipping Management Dashboard</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Manifests -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Manifests</h2>
+            <p class="text-gray-600 mb-4">Manage shipping manifests and related documents</p>
+            <a href="{{ url_for('s001_manifest.list_s001_manifest') }}" 
+               class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View Manifests
+            </a>
+        </div>
+
+        <!-- Line Items -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Line Items</h2>
+            <p class="text-gray-600 mb-4">Track individual shipping items and their details</p>
+            <a href="{{ url_for('s002_lineitem.list_s002_lineitem') }}" 
+               class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View Line Items
+            </a>
+        </div>
+
+        <!-- Clients -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Clients</h2>
+            <p class="text-gray-600 mb-4">Manage client information and relationships</p>
+            <a href="{{ url_for('s015_client.list_s015_client') }}" 
+               class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View Clients
+            </a>
+        </div>
+
+        <!-- Users -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Users</h2>
+            <p class="text-gray-600 mb-4">Manage system users and their permissions</p>
+            <a href="{{ url_for('s016_user.list_s016_user') }}" 
+               class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View Users
+            </a>
+        </div>
+
+        <!-- Commodities -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Commodities</h2>
+            <p class="text-gray-600 mb-4">Manage shipping commodities and their classifications</p>
+            <a href="{{ url_for('s003_commodity.list_s003_commodity') }}" 
+               class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View Commodities
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Quick Links</h2>
+            <ul class="space-y-2">
+                <li>
+                    <a href="{{ url_for('s012_port.list_s012_port') }}" 
+                       class="text-blue-600 hover:text-blue-800">Ports</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('s008_shippingcompany.list_s008_shippingcompany') }}" 
+                       class="text-blue-600 hover:text-blue-800">Shipping Companies</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('s009_vessel.list_s009_vessel') }}" 
+                       class="text-blue-600 hover:text-blue-800">Vessels</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('s010_voyage.list_s010_voyage') }}" 
+                       class="text-blue-600 hover:text-blue-800">Voyages</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
-
-<div id="content" class="mt-6">
-    <!-- HTMX content will be loaded here -->
-</div>
 {% endblock %}
-
-{% block year %}2024{% endblock %}

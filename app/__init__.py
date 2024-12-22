@@ -1,68 +1,43 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from config import Config
-import click
+from datetime import datetime
+import secrets
 
-db = SQLAlchemy()
-migrate = Migrate()
+app = Flask(__name__)
 
-def create_app(config_class=Config):
-    app = Flask(__name__)
-    app.config.from_object(config_class)
-    
-    # Initialize extensions
-    db.init_app(app)
-    migrate.init_app(app, db)
-    
-    # Register blueprints
-    from app.routes import main
-    app.register_blueprint(main.bp)
-    
-    # Ensure the instance folder exists
-    try:
-        import os
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shipping.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Register CLI commands
-    @app.cli.command("init-db")
-    def init_db():
-        """Initialize the database."""
-        click.echo('Creating database tables...')
-        db.create_all()
-        click.echo('Database tables created!')
+# Security configuration
+app.config['SECRET_KEY'] = secrets.token_hex(16)
 
-    @app.cli.command("seed-db")
-    def seed_db():
-        """Seed the database with initial data."""
-        from app.models.shipping import (
-            Country, Port, ShippingCompany, 
-            ContainerStatus, PackType, Commodity
-        )
+# Initialize extensions
+db = SQLAlchemy(app)
 
-        # Add some initial data
-        if not Country.query.first():
-            countries = [
-                Country(name='United States'),
-                Country(name='China'),
-                Country(name='Singapore')
-            ]
-            db.session.add_all(countries)
-            db.session.commit()
-            click.echo('Added initial countries')
+# Import and setup models after db is defined
+from app.models import shipping
+from app.models.model_setup import setup_models
+setup_models()
 
-        if not ContainerStatus.query.first():
-            statuses = [
-                ContainerStatus(name='Empty', description='Container is empty'),
-                ContainerStatus(name='Loaded', description='Container is loaded'),
-                ContainerStatus(name='In Transit', description='Container is in transit')
-            ]
-            db.session.add_all(statuses)
-            db.session.commit()
-            click.echo('Added container statuses')
+# Register blueprints
+from app.routes import main
+app.register_blueprint(main.bp)
 
-        click.echo('Database seeded!')
-        
-    return app
+from app.routes.crud import bp as crud_bp
+app.register_blueprint(crud_bp, url_prefix='/crud')
+
+# Configure context processors
+@app.context_processor
+def utility_processor():
+    return dict(year=datetime.now().year)
+
+# Configure error handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500

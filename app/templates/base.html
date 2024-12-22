@@ -28,6 +28,23 @@
                     </div>
                     <div class="hidden md:ml-6 md:flex md:space-x-8">
                         <a href="/" class="inline-flex items-center px-1 pt-1 text-gray-700">Home</a>
+                        <div class="relative group">
+                            <button class="inline-flex items-center px-1 pt-1 text-gray-700">
+                                Data Management
+                                <svg class="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block">
+                                <div class="py-1" role="menu">
+                                    <a href="{{ url_for('s001_manifest.list_s001_manifest') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manifests</a>
+                                    <a href="{{ url_for('s002_lineitem.list_s002_lineitem') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Line Items</a>
+                                    <a href="{{ url_for('s003_commodity.list_s003_commodity') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Commodities</a>
+                                    <a href="{{ url_for('s015_client.list_s015_client') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Clients</a>
+                                    <a href="{{ url_for('s016_user.list_s016_user') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Users</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -35,7 +52,9 @@
     </nav>
 
     <main class="container mx-auto px-4 py-6">
-        {% block content %}{% endblock %}
+        <div id="main-content" hx-target="this">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <footer class="bg-white shadow-lg mt-8">
