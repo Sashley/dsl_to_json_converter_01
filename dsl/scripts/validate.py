@@ -5,8 +5,9 @@ Script to validate DSL schema files.
 import sys
 from pathlib import Path
 
-# Add parent directory to path so we can import our modules
-sys.path.append(str(Path(__file__).parent.parent))
+# Add project root directory to path so we can import our modules
+project_root = str(Path(__file__).parent.parent.parent)
+sys.path.append(project_root)
 
 from dsl.converter.validation import validate_dsl
 
@@ -19,8 +20,16 @@ def main():
         sys.exit(1)
     
     print(f"Validating schema file: {schema_file}")
-    validate_dsl(schema_file)
-    print("✓ Schema validation passed")
+    is_valid, errors = validate_dsl(schema_file)
+    
+    if is_valid:
+        print("✓ Schema validation passed")
+        sys.exit(0)
+    else:
+        print("✗ Schema validation failed:")
+        for error in errors:
+            print(f"  - {error}")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
