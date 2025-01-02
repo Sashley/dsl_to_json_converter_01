@@ -4,7 +4,7 @@
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">S016_User List</h1>
-        <a href="{{ url_for('create_s016_user') }}" 
+        <a href="{{ url_for('crud.s016_user.create_s016_user') }}" 
            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Add New S016_User
         </a>
@@ -20,7 +20,7 @@
             </thead>
             <tbody hx-target="closest tr" hx-swap="outerHTML">
                 {% for item in items %}
-                {% include 's016_user/_row.html' %}
+                {% include 'crud/s016_user/_row.html' %}
                 {% endfor %}
             </tbody>
         </table>

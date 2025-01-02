@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
 # Add the project root directory to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import app, db
+from app import create_app, db
+
+app = create_app()
 from app.models.shipping import (
     S001_Manifest, S002_LineItem, S003_Commodity, S004_PackType, 
     S005_Container, S006_ContainerHistory, S007_ContainerStatus, 
@@ -250,8 +252,8 @@ def populate_data():
                         voyage_id=voyage.id,
                         leg_number=leg_num + 1,  # Start from 1
                         port_id=voyage_ports[leg_num].id,
-                        eta=arrival_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        etd=departure_date.strftime("%Y-%m-%d %H:%M:%S")
+                        eta=arrival_date,
+                        etd=departure_date
                     )
                 )
         db.session.add_all(legs)
@@ -317,7 +319,7 @@ def populate_data():
                 place_of_delivery=random.choice(["Warehouse A", "Terminal B", "Distribution Center C"]),
                 place_of_receipt=random.choice(["Factory X", "Supplier Y", "Warehouse Z"]),
                 clauses="Standard shipping terms apply",
-                date_of_receipt=datetime.now().strftime("%Y-%m-%d")
+                date_of_receipt=datetime.now()
             )
             manifests.append(manifest)
         db.session.add_all(manifests)
@@ -350,7 +352,7 @@ def populate_data():
                 pack_type_id=random.randint(1, len(packtypes)),
                 client_id=random.randint(1, len(clients)),
                 rate=str(random.randint(15, 200)),
-                effective=datetime.now().strftime("%Y-%m-%d")
+                effective=datetime.now()
             )
             for _ in range(300)
         ]

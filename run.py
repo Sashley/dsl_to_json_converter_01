@@ -1,7 +1,6 @@
 from app import create_app, db
-from config import config
 
-app = create_app(config['development'])
+app = create_app()
 
 @app.shell_context_processor
 def make_shell_context():

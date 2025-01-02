@@ -9,15 +9,12 @@ db = SQLAlchemy()
 def create_app(test_config=None):
     app = Flask(__name__)
 
-    # Database configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shipping.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    # Security configuration
-    app.config['SECRET_KEY'] = secrets.token_hex(16)
-
-    # Override config with test config if provided
-    if test_config is not None:
+    # Load configuration
+    if test_config is None:
+        # Load the default configuration
+        app.config.from_object('config.DevelopmentConfig')
+    else:
+        # Load the test config if passed in
         app.config.update(test_config)
 
     # Initialize Flask extensions

@@ -1,14 +1,17 @@
 from pathlib import Path
 import json
-from typing import Dict, Any
+from typing import Dict, Any, List
+
+def get_display_fields(fields: Dict[str, Any], max_fields: int = 5) -> List[str]:
+    """Get the first N fields excluding id for display in list view."""
+    all_fields = list(fields.keys())
+    # Remove 'id' if it's present
+    if 'id' in all_fields:
+        all_fields.remove('id')
+    return all_fields[:max_fields]
 
 def generate_crud_templates(json_file: str | Path, output_dir: str | Path) -> None:
-    """Generate CRUD templates from a JSON schema file.
-    
-    Args:
-        json_file: Path to the JSON schema file
-        output_dir: Directory where templates will be generated
-    """
+    """Generate CRUD templates from a JSON schema file."""
     json_path = Path(json_file)
     output_path = Path(output_dir)
     
@@ -19,9 +22,10 @@ def generate_crud_templates(json_file: str | Path, output_dir: str | Path) -> No
     for model_name, model_data in models.items():
         table_name = model_name.lower()
         fields = model_data["Fields"]
+        display_fields = get_display_fields(fields)
 
         # Create output directory for the model
-        model_dir = output_path / table_name
+        model_dir = output_path / "crud" / table_name
         model_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate List Template
@@ -31,51 +35,100 @@ def generate_crud_templates(json_file: str | Path, output_dir: str | Path) -> No
 
 {{% block content %}}
 <div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">{model_name} List</h1>
-        <a href="{{{{ url_for('create_{table_name}') }}}}" 
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Add New {model_name}
-        </a>
-    </div>
+    <div class="flex flex-col space-y-4">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold">{model_name} List</h1>
+            <a href="{{{{ url_for('crud.{table_name}.create_{table_name}') }}}}" 
+               class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded">
+                Add New {model_name}
+            </a>
+        </div>
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white">
-            <thead>
-                <tr class="bg-gray-100">
-                    {''.join(f'<th class="px-6 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{field}</th>' for field in fields.keys())}
-                    <th class="px-6 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody hx-target="closest tr" hx-swap="outerHTML">
-                {{% for item in items %}}
-                {{% include '{table_name}/_row.html' %}}
-                {{% endfor %}}
-            </tbody>
-        </table>
+        <!-- Search -->
+        <div class="w-1/3">
+            <input type="text"
+                   class="w-full px-3 py-2 border rounded-lg"
+                   placeholder="Search..."
+                   hx-trigger="keyup changed delay:500ms"
+                   hx-get="{{{{ url_for('crud.{table_name}.list_{table_name}') }}}}"
+                   hx-target="#{table_name}-list"
+                   name="search">
+        </div>
+
+        <!-- Table Container -->
+        <div class="border rounded-lg overflow-hidden">
+            <div class="overflow-y-auto" style="max-height: 600px;">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-100 sticky top-0 z-10">
+                        <tr>
+                            {''.join(f'<th class="px-4 py-2 text-left text-sm font-bold text-gray-700 border-b">{field.replace("_", " ").title()}</th>' for field in display_fields)}
+                            <th class="px-4 py-2 text-left text-sm font-bold text-gray-700 border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="{table_name}-list">
+                        {{% include 'crud/{table_name}/_rows.html' %}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Table Controls -->
+        <div class="flex justify-between items-center mt-4">
+            <div class="flex items-center space-x-2">
+                <label class="text-sm text-gray-600">Records per page:</label>
+                <select class="border rounded px-2 py-1"
+                        hx-get="{{{{ url_for('crud.{table_name}.list_{table_name}') }}}}"
+                        hx-target="#{table_name}-list"
+                        name="per_page">
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            {{% if has_more %}}
+            <button hx-get="{{{{ url_for('crud.{table_name}.list_{table_name}', page=page+1) }}}}"
+                    hx-target="#{table_name}-list"
+                    hx-swap="beforeend"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded">
+                Load More
+            </button>
+            {{% endif %}}
+        </div>
     </div>
 </div>
-{{% endblock %}}
-""")
+{{% endblock %}}""")
+
+        # Generate Rows Template
+        rows_template = model_dir / "_rows.html"
+        rows_template.write_text(f"""\
+{{% for item in items %}}
+{{% include 'crud/{table_name}/_row.html' %}}
+{{% endfor %}}""")
 
         # Generate Row Template
         row_template = model_dir / "_row.html"
         row_template.write_text(f"""\
-<tr class="hover:bg-gray-50">
-    {''.join(f'<td class="px-6 py-4 whitespace-nowrap border-b border-gray-200">{{{{ item.{field} }}}}</td>' for field in fields.keys())}
-    <td class="px-6 py-4 whitespace-nowrap border-b border-gray-200">
-        <button hx-get="{{{{ url_for('edit_{table_name}', id=item.id) }}}}"
-                class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded text-sm mr-2">
-            Edit
-        </button>
-        <button hx-delete="{{{{ url_for('delete_{table_name}', id=item.id) }}}}"
-                hx-confirm="Are you sure you want to delete this {model_name}?"
-                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm">
-            Delete
-        </button>
+<tr class="hover:bg-gray-50 group">
+    {''.join(f'''<td class="px-4 py-1 whitespace-nowrap border-b text-sm">
+        {{{{ item.{field}_name if '{field}' in item.__dict__ and '{field}'.endswith('_id') else item.{field} }}}}
+    </td>''' for field in display_fields)}
+    <td class="px-4 py-1 whitespace-nowrap border-b text-sm">
+        <div class="invisible group-hover:visible flex justify-end space-x-2">
+            <a href="{{{{ url_for('crud.{table_name}.edit_{table_name}', id=item.id) }}}}"
+               class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 rounded text-sm">
+                Edit
+            </a>
+            <button hx-delete="{{{{ url_for('crud.{table_name}.delete_{table_name}', id=item.id) }}}}"
+                    hx-confirm="Are you sure you want to delete this {model_name}?"
+                    hx-target="closest tr"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 rounded text-sm">
+                Delete
+            </button>
+        </div>
     </td>
-</tr>
-""")
+</tr>""")
 
         # Generate Form Template
         # Check if this is a complex model that needs relationship helpers
@@ -107,40 +160,44 @@ def generate_crud_templates(json_file: str | Path, output_dir: str | Path) -> No
 
 {{% block content %}}
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">{{{{ 'Edit ' if edit else 'Add New ' }}}}{model_name}</h1>
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">{{{{ 'Edit ' if edit else 'Add New ' }}}}{model_name}</h1>
 
-    <form hx-post="{{{{ form_action }}}}" hx-target="#main-content" class="max-w-lg">
-        {''.join(f"""
-        <div class="mb-4">
-            <label for="{field}" class="block text-gray-700 text-sm font-bold mb-2">{field.title().replace('_', ' ')}</label>
-            {'<select' if any(field == rel[0] for rel in relationship_fields) else '<input type="text"'} 
-                   id="{field}" 
-                   name="{field}"
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                   {'>' if any(field == rel[0] for rel in relationship_fields) else f'value="{{{{ item.{field} if edit else \'\' }}}}">'}{'''
-                <option value="">Select...</option>
-                {{% for related in ''' + next(rel[1] for rel in relationship_fields if rel[0] == field) + ''' %}}
-                <option value="{{{{ related.id }}}}" {{{{ 'selected' if edit and item.''' + field + ''' == related.id else '' }}}}>
-                    {{{{ related.name if hasattr(related, 'name') else related.id }}}}
-                </option>
-                {{% endfor %}}
-            </select>''' if any(field == rel[0] for rel in relationship_fields) else '</input>'}
-        </div>""" for field in fields.keys())}
-        
-        <div class="flex items-center justify-between mt-6">
-            <button type="submit" 
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                {{{{ 'Update' if edit else 'Create' }}}}
-            </button>
-            <a href="{{{{ url_for('{table_name}.list_{table_name}') }}}}" 
-               class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Cancel
-            </a>
-        </div>
-    </form>
+        <form hx-post="{{{{ form_action }}}}" 
+              hx-target="#main-content"
+              hx-swap="outerHTML"
+              class="space-y-6">
+            {''.join(f"""
+            <div class="flex flex-col">
+                <label for="{field}" class="text-sm font-semibold text-gray-600 mb-1">{field.title().replace('_', ' ')}</label>
+                {'<select' if any(field == rel[0] for rel in relationship_fields) else '<input type="text"'} 
+                       id="{field}" 
+                       name="{field}"
+                       class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       {'>' if any(field == rel[0] for rel in relationship_fields) else f'value="{{{{ item.{field} if edit else \'\' }}}}">'}{'''
+                    <option value="">Select...</option>
+                    {{% for related in ''' + next(rel[1] for rel in relationship_fields if rel[0] == field) + ''' %}}
+                    <option value="{{{{ related.id }}}}" {{{{ 'selected' if edit and item.''' + field + ''' == related.id else '' }}}}>
+                        {{{{ related.name if hasattr(related, 'name') else related.id }}}}
+                    </option>
+                    {{% endfor %}}
+                </select>''' if any(field == rel[0] for rel in relationship_fields) else '</input>'}
+            </div>""" for field in fields.keys())}
+            
+            <div class="flex justify-end space-x-4 mt-8">
+                <a href="{{{{ url_for('crud.{table_name}.list_{table_name}') }}}}" 
+                   class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded">
+                    {{{{ 'Update' if edit else 'Create' }}}}
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
-{{% endblock %}}
-""")
+{{% endblock %}}""")
 
     print(f"CRUD templates generated in {output_dir}")
 
